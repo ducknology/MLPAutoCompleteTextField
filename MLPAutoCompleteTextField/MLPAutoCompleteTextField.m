@@ -424,6 +424,12 @@ withAutoCompleteString:(NSString *)string
     
     
     if(numberOfRows && (self.autoCompleteTableViewHidden == NO)){
+		UIView* tableContainerView = [self.autoCompleteDelegate autoCompleteTextFieldViewToAttach:self];
+		if (tableContainerView == nil)
+		{
+			tableContainerView = self.superview;
+		}
+		
         [self.autoCompleteTableView setAlpha:1];
         
         if(!self.autoCompleteTableView.superview){
@@ -434,14 +440,15 @@ withAutoCompleteString:(NSString *)string
             }
         }
         
-        [self.superview bringSubviewToFront:self];
+//        [self.superview bringSubviewToFront:self];
 #if BROKEN
         UIView *rootView = [self.window.subviews objectAtIndex:0];
         [rootView insertSubview:self.autoCompleteTableView
                    belowSubview:self];
 #else
-        [self.superview insertSubview:self.autoCompleteTableView
-                         belowSubview:self];
+		[tableContainerView addSubview:self.autoCompleteTableView];
+//        [self.superview insertSubview:self.autoCompleteTableView
+//                         belowSubview:self];
 #endif
         [self.autoCompleteTableView setUserInteractionEnabled:YES];
         if(self.showTextFieldDropShadowWhenAutoCompleteTableIsOpen){
@@ -634,12 +641,15 @@ withAutoCompleteString:(NSString *)string
     }
 }
 
+//#define CONTENTINSET_HEIGHT 18
+#define CONTENTINSET_HEIGHT 0
+
 - (void)setRoundedRectStyleForAutoCompleteTableView
 {
     [self setAutoCompleteTableCornerRadius:8.0];
-    [self setAutoCompleteTableOriginOffset:CGSizeMake(0, -18)];
-    [self setAutoCompleteScrollIndicatorInsets:UIEdgeInsetsMake(18, 0, 0, 0)];
-    [self setAutoCompleteContentInsets:UIEdgeInsetsMake(18, 0, 0, 0)];
+    [self setAutoCompleteTableOriginOffset:CGSizeMake(0, -CONTENTINSET_HEIGHT)];
+    [self setAutoCompleteScrollIndicatorInsets:UIEdgeInsetsMake(CONTENTINSET_HEIGHT, 0, 0, 0)];
+    [self setAutoCompleteContentInsets:UIEdgeInsetsMake(CONTENTINSET_HEIGHT, 0, 0, 0)];
     
     if(self.backgroundColor == [UIColor clearColor]){
         [self setAutoCompleteTableBackgroundColor:[UIColor whiteColor]];
@@ -823,7 +833,15 @@ withAutoCompleteString:(NSString *)string
     frame.origin.x += textField.autoCompleteTableOriginOffset.width;
     frame.origin.y += textField.autoCompleteTableOriginOffset.height;
     frame = CGRectInset(frame, 1, 0);
-    
+	
+	//	conversion to targetView
+	UIView* tableContainerView = [self.autoCompleteDelegate autoCompleteTextFieldViewToAttach:self];
+	if (tableContainerView == nil)
+	{
+		return frame;
+	}
+	
+	[tableContainerView convertRect:frame fromView:self.superview];
     return frame;
 }
 

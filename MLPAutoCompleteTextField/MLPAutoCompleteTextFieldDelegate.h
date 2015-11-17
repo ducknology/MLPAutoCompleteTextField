@@ -18,6 +18,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 @class MLPAutoCompleteTextField;
 @protocol MLPAutoCompleteTextFieldDelegate <NSObject>
 
+@required
+- (UIView*)autoCompleteTextFieldViewToAttach:(MLPAutoCompleteTextField *)textField;
+
 @optional
 - (BOOL)autoCompleteTextField:(MLPAutoCompleteTextField *)textField
     shouldStyleAutoCompleteTableView:(UITableView *)autoCompleteTableView

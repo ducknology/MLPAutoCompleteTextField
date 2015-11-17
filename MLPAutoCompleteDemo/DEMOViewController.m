@@ -192,5 +192,11 @@
     }
 }
 
+- (UIView*)autoCompleteTextFieldViewToAttach:(MLPAutoCompleteTextField *)textField
+{
+	UIView* rootView = UIApplication.sharedApplication.delegate.window.rootViewController.view;
+	return rootView;
+}
+
 
 @end
