@@ -841,7 +841,7 @@ withAutoCompleteString:(NSString *)string
 		return frame;
 	}
 	
-	[tableContainerView convertRect:frame fromView:self.superview];
+	frame = [tableContainerView convertRect:frame fromView:self.superview];
     return frame;
 }
 
